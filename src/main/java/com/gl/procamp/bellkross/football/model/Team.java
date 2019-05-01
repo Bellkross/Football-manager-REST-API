@@ -26,4 +26,14 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private Set<Player> players = new HashSet<Player>();
 
+    public void addPlayer(Player player) {
+        players.add(player);
+        player.setTeam(this);
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
+        player.setTeam(null);
+    }
+
 }
