@@ -3,6 +3,7 @@ package com.gl.procamp.bellkross.football.dao.impl;
 import com.gl.procamp.bellkross.football.dao.PlayerDao;
 import com.gl.procamp.bellkross.football.model.Player;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -16,6 +17,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
 @Repository(value = "playerDao")
+@Transactional
 public class PlayerRepository implements PlayerDao {
 
     private final String PLAYER_NOT_FOUND_EXCEPTION = "Player with id = %d not found";
