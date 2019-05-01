@@ -2,6 +2,7 @@ package com.gl.procamp.bellkross.football.dao.impl;
 
 import com.gl.procamp.bellkross.football.dao.TeamDao;
 import com.gl.procamp.bellkross.football.model.Team;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -14,6 +15,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
+@Repository(value = "teamDao")
 public class TeamRepository implements TeamDao {
 
     private final String TEAM_NOT_FOUND_EXCEPTION = "Team with id = %d not found";
