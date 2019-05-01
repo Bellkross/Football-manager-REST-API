@@ -8,13 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
 
 @Repository(value = "teamDao")
 @Transactional
@@ -25,13 +23,14 @@ public class TeamRepository implements TeamDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Collection<Team> findAll() {
+    public List<Team> findAll() {
         return entityManager.createQuery("select t from Team t", Team.class).getResultList();
     }
 
-    public Optional<Team> findById(Integer id) {
+    public Team findById(Integer id) {
         requireNonNull(id);
-        return ofNullable(entityManager.find(Team.class, id));
+        requiredInDatabase(id);
+        return entityManager.find(Team.class, id);
     }
 
     public Team save(Team team) {

@@ -1,13 +1,12 @@
 package com.gl.procamp.bellkross.football.dao;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 public interface CrudDao<Entity, Id> {
 
-    Collection<Entity> findAll();
+    List<Entity> findAll();
 
-    Optional<Entity> findById(Id id);
+    Entity findById(Id id);
 
     Entity save(Entity entity);
 

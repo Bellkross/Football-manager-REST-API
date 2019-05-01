@@ -8,13 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
 
 @Repository(value = "playerDao")
 @Transactional
@@ -26,14 +24,15 @@ public class PlayerRepository implements PlayerDao {
     private EntityManager entityManager;
 
     @Override
-    public Collection<Player> findAll() {
+    public List<Player> findAll() {
         return entityManager.createQuery("select p from Player p", Player.class).getResultList();
     }
 
     @Override
-    public Optional<Player> findById(Integer id) {
+    public Player findById(Integer id) {
         requireNonNull(id);
-        return ofNullable(entityManager.find(Player.class, id));
+        requiredInDatabase(id);
+        return entityManager.find(Player.class, id);
     }
 
     @Override
