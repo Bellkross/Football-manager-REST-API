@@ -2,10 +2,9 @@ package com.gl.procamp.bellkross.football.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,5 +22,8 @@ public class Team {
     private String name;
     @OneToOne(optional = false)
     private Player captain;
+    @Setter(AccessLevel.PRIVATE)
+    @OneToMany(mappedBy = "team")
+    private Set<Player> players = new HashSet<Player>();
 
 }
