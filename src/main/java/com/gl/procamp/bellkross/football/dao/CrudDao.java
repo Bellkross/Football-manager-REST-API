@@ -9,7 +9,7 @@ public interface CrudDao<Entity, Id> {
 
     Collection<Entity> findAll();
     Optional<Entity> findById(Id id);
-    Optional<Entity> save(Entity entity);
+    Entity save(Entity entity);
     void deleteById(Id id);
     void delete(Entity entity);
 
