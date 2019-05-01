@@ -2,10 +2,7 @@ package com.gl.procamp.bellkross.football.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -25,7 +22,8 @@ public class Player {
     @Column(nullable = false)
     private String lastName;
     @Column(nullable = false)
-    private String position;
+    @Enumerated(value = EnumType.STRING)
+    private Position position;
     @Column(nullable = false)
     private Date birthday;
     @ManyToOne
