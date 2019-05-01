@@ -12,7 +12,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
 
-import static com.gl.procamp.bellkross.football.config.EnvironmentVariables.*;
+import static com.gl.procamp.bellkross.football.config.JpaConfig.EnvironmentVariables.*;
 
 @Configuration
 @PropertySource("bellkross.properties")
@@ -50,6 +50,13 @@ public class JpaConfig {
         emf.setJpaVendorAdapter(jpaVendorAdapter);
         emf.setPackagesToScan("com.gl.procamp.bellkross.football.model");
         return emf;
+    }
+
+    public static class EnvironmentVariables {
+        public static String DB_DRIVER_CLASS_NAME = "database.driverClassName";
+        public static String DB_URL = "database.url";
+        public static String DB_NAME = "database.user";
+        public static String DB_PASSWORD = "database.password";
     }
 
 }
