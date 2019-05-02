@@ -29,8 +29,11 @@ public class TeamRepository implements TeamDao {
 
     public Team findById(Integer id) {
         requireNonNull(id);
-        requiredInDatabase(id);
-        return entityManager.find(Team.class, id);
+        Team team = entityManager.find(Team.class, id);
+        if (isNull(team)) {
+            throw new EntityNotFoundException(format(TEAM_NOT_FOUND_EXCEPTION, id));
+        }
+        return team;
     }
 
     public Team save(Team team) {
