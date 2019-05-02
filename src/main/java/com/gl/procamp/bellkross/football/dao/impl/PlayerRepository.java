@@ -31,8 +31,11 @@ public class PlayerRepository implements PlayerDao {
     @Override
     public Player findById(Integer id) {
         requireNonNull(id);
-        requiredInDatabase(id);
-        return entityManager.find(Player.class, id);
+        Player player = entityManager.find(Player.class, id);
+        if (isNull(player)) {
+            throw new EntityNotFoundException(format(PLAYER_NOT_FOUND_EXCEPTION, id));
+        }
+        return player;
     }
 
     @Override
