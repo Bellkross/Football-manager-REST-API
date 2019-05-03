@@ -11,8 +11,6 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-// todo: add field checking for team and player entities
-
 @RestController
 @RequestMapping("/teams")
 public class TeamsRestController {
@@ -26,7 +24,7 @@ public class TeamsRestController {
     }
 
     @GetMapping("/{id}")
-    Team getTeam(@PathVariable Integer id) {
+    Team getTeam(@PathVariable("id") Integer id) {
         requireNonNull(id);
         return teamDao.findById(id);
     }
@@ -38,7 +36,7 @@ public class TeamsRestController {
     }
 
     @PutMapping("/{id}")
-    Team putTeam(@PathVariable Integer id, @RequestBody Team team) {
+    Team putTeam(@PathVariable("id") Integer id, @RequestBody Team team) {
         requireNonNull(id);
         requireNonNull(team);
         requireNonNull(team.getId());
@@ -49,7 +47,7 @@ public class TeamsRestController {
     }
 
     @DeleteMapping("/{id}")
-    void deleteTeam(@PathVariable Integer id) {
+    void deleteTeam(@PathVariable("id") Integer id) {
         requireNonNull(id);
         teamDao.deleteById(id);
     }
@@ -60,20 +58,20 @@ public class TeamsRestController {
     }
 
     @GetMapping("/{id}/players")
-    Set<Player> getPlayers(@PathVariable Integer id) {
+    Set<Player> getPlayers(@PathVariable("id") Integer id) {
         requireNonNull(id);
         return teamDao.findById(id).getPlayers();
     }
 
     @GetMapping("/{id}/captain")
-    Player getCaptain(@PathVariable Integer id) {
+    Player getCaptain(@PathVariable("id") Integer id) {
         requireNonNull(id);
         return teamDao.findById(id).getCaptain();
     }
 
 
     @PostMapping("/{id}/player")
-    Player postPlayerToATeam(@PathVariable Integer id, @RequestBody Player player) {
+    Player postPlayerToATeam(@PathVariable("id") Integer id, @RequestBody Player player) {
         requireNonNull(id);
         requireNonNull(player);
         Team team = teamDao.findById(id);
@@ -84,7 +82,7 @@ public class TeamsRestController {
     }
 
     @PostMapping("/{team_id}/captain/{player_id}")
-    Player assignACaptain(@PathVariable("team_id") Integer teamId, @PathVariable Integer playerId) {
+    Player assignACaptain(@PathVariable("team_id") Integer teamId, @PathVariable("player_id") Integer playerId) {
         requireNonNull(teamId);
         requireNonNull(playerId);
         Team team = teamDao.findById(teamId);
