@@ -3,10 +3,6 @@ package com.gl.procamp.bellkross.football.dto;
 import com.gl.procamp.bellkross.football.model.Team;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
 import static com.gl.procamp.bellkross.football.dto.PlayerDto.fromPlayer;
 import static com.gl.procamp.bellkross.football.dto.PlayerDto.toPlayer;
 
@@ -18,12 +14,9 @@ import static com.gl.procamp.bellkross.football.dto.PlayerDto.toPlayer;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TeamDto {
 
-    @Id
     @EqualsAndHashCode.Include
     private Integer id;
-    @Column(nullable = false)
     private String name;
-    @OneToOne(optional = false)
     private PlayerDto captain;
 
     public TeamDto(Team team) {
