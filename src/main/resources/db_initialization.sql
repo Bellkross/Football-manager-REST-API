@@ -71,6 +71,8 @@ do $$
 
             free_team_id = free_team_id + 1;
         end loop;
+        create sequence player_id_sequence start with 110;
+        create sequence team_id_sequence start with 110;
     end $$;
 
 drop function if exists get_player_role_by_number(number bigint);
