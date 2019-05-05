@@ -39,4 +39,14 @@ public class PlayerDto {
         return new PlayerDto(player);
     }
 
+    public static Player toPlayer(PlayerDto playerDto) {
+        Player player = new Player();
+        player.setId(playerDto.getId());
+        player.setFirstName(playerDto.getFirstName());
+        player.setLastName(playerDto.getLastName());
+        player.setBirthday(playerDto.getBirthday());
+        player.setPosition(playerDto.getPosition());
+        return player;
+    }
+
 }
