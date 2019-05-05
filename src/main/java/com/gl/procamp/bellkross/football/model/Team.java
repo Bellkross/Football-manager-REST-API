@@ -20,11 +20,12 @@ public class Team {
     private Integer id;
     @Column(nullable = false)
     private String name;
-    @OneToOne(optional = false)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "captain_id")
     private Player captain;
     @Setter(AccessLevel.PRIVATE)
-    @OneToMany(mappedBy = "team")
-    private Set<Player> players = new HashSet<Player>();
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    private Set<Player> players = new HashSet<>();
 
     public void addPlayer(Player player) {
         players.add(player);

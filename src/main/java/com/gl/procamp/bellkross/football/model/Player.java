@@ -26,7 +26,8 @@ public class Player {
     private Position position;
     @Column(nullable = false)
     private Date birthday;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
     private Team team;
 
 }

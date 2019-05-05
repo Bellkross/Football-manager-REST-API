@@ -1,52 +1,62 @@
 package com.gl.procamp.bellkross.football.web.controller;
 
-import com.gl.procamp.bellkross.football.dao.PlayerDao;
+import com.gl.procamp.bellkross.football.dao.PlayerRepository;
+import com.gl.procamp.bellkross.football.dto.PlayerDto;
 import com.gl.procamp.bellkross.football.model.Player;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+import static com.gl.procamp.bellkross.football.dto.PlayerDto.fromPlayer;
+import static com.gl.procamp.bellkross.football.web.controller.ErrorMessages.PLAYER_NOT_FOUND_EXCEPTION;
+import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 @RestController
 @RequestMapping("/players")
 public class PlayerRestController {
 
-    private final PlayerDao playerDao;
+    private final PlayerRepository playerDao;
 
-    public PlayerRestController(PlayerDao playerDao) {
+    public PlayerRestController(PlayerRepository playerDao) {
         this.playerDao = playerDao;
     }
 
-    @GetMapping
-    List<Player> getPlayers() {
-        return playerDao.findAll();
+    @RequestMapping(method = RequestMethod.GET)
+    List<PlayerDto> getPlayers() {
+        return playerDao.findAll().stream().map(PlayerDto::fromPlayer).collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    Player getPlayer(@PathVariable Integer id) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    PlayerDto getPlayer(@PathVariable Integer id) {
         requireNonNull(id);
-        return playerDao.findById(id);
+        Player player = playerDao.findById(id)
+                .orElseThrow((Supplier<RuntimeException>) () ->
+                        new EntityNotFoundException(format(PLAYER_NOT_FOUND_EXCEPTION, id)));
+        return fromPlayer(player);
     }
 
-    @PostMapping
-    Player postPlayer(@RequestBody Player player) {
+    @RequestMapping(method = RequestMethod.POST)
+    PlayerDto postPlayer(@RequestBody Player player) {
         requireNonNull(player);
-        return playerDao.save(player);
+        return fromPlayer(playerDao.save(player));
     }
 
-    @PutMapping("/{id}")
-    Player putPlayer(@PathVariable Integer id, @RequestBody Player player) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    PlayerDto putPlayer(@PathVariable Integer id, @RequestBody Player player) {
         requireNonNull(id);
         requireNonNull(player);
         requireNonNull(player.getId());
         if (!id.equals(player.getId())) {
-            throw new IllegalArgumentException(String.format("Incorrect player id = %d", id));
+            throw new IllegalArgumentException(format("Incorrect player id = %d", id));
         }
-        return playerDao.save(player);
+        return fromPlayer(playerDao.save(player));
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     void deletePlayer(@PathVariable Integer id) {
         requireNonNull(id);
         playerDao.deleteById(id);
