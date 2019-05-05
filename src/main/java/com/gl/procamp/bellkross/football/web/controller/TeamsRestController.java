@@ -15,7 +15,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.gl.procamp.bellkross.football.dto.PlayerDto.fromPlayer;
+import static com.gl.procamp.bellkross.football.dto.PlayerDto.toPlayer;
 import static com.gl.procamp.bellkross.football.dto.TeamDto.fromTeam;
+import static com.gl.procamp.bellkross.football.dto.TeamDto.toTeam;
 import static com.gl.procamp.bellkross.football.web.controller.ErrorMessages.PLAYER_NOT_FOUND_EXCEPTION;
 import static com.gl.procamp.bellkross.football.web.controller.ErrorMessages.TEAM_NOT_FOUND_EXCEPTION;
 import static java.lang.String.format;
@@ -51,20 +53,38 @@ public class TeamsRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    TeamDto postTeam(@RequestBody Team team) {
+    TeamDto postTeam(@RequestBody TeamDto team) {
         requireNonNull(team);
-        return fromTeam(teamDao.save(team));
+        requireNonNull(team.getCaptainId());
+        return fromTeam(teamDao.save(toTeamWithCaptain(team)));
+    }
+
+    private Team toTeamWithCaptain(TeamDto teamDto) {
+        Team team = toTeam(teamDto);
+        team.setCaptain(fetchCaptain(teamDto));
+        return team;
+    }
+
+    private Player fetchCaptain(TeamDto team) {
+        return fetchPlayer(team.getCaptainId());
+    }
+
+    private Player fetchPlayer(Integer id) {
+        return playerDao.findById(id).orElseThrow((Supplier<RuntimeException>) () ->
+                new EntityNotFoundException(format(PLAYER_NOT_FOUND_EXCEPTION, id))
+        );
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    TeamDto putTeam(@PathVariable("id") Integer id, @RequestBody Team team) {
+    TeamDto putTeam(@PathVariable("id") Integer id, @RequestBody TeamDto team) {
         requireNonNull(id);
         requireNonNull(team);
         requireNonNull(team.getId());
+        requireNonNull(team.getCaptainId());
         if (!id.equals(team.getId())) {
             throw new IllegalArgumentException(format("Incorrect team id = %d", id));
         }
-        return fromTeam(teamDao.save(team));
+        return fromTeam(teamDao.save(toTeamWithCaptain(team)));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -88,18 +108,17 @@ public class TeamsRestController {
 
 
     @RequestMapping(value = "/{id}/player", method = RequestMethod.POST)
-    PlayerDto postPlayerToATeam(@PathVariable("id") Integer id, @RequestBody Player player) {
+    TeamDto postPlayerToATeam(@PathVariable("id") Integer id, @RequestBody PlayerDto player) {
         requireNonNull(id);
         requireNonNull(player);
         Team team = getExistingTeamById(id);
-        team.addPlayer(player);
-        teamDao.save(team);
-        playerDao.save(player);
-        return fromPlayer(player);
+        team.addPlayer(toPlayer(player));
+        playerDao.save(toPlayer(player));
+        return fromTeam(teamDao.save(team));
     }
 
     @RequestMapping(value = "/{team_id}/captain/{player_id}", method = RequestMethod.PUT)
-    PlayerDto assignACaptain(@PathVariable("team_id") Integer teamId, @PathVariable("player_id") Integer playerId) {
+    TeamDto assignACaptain(@PathVariable("team_id") Integer teamId, @PathVariable("player_id") Integer playerId) {
         requireNonNull(teamId);
         requireNonNull(playerId);
         Team team = getExistingTeamById(teamId);
@@ -108,9 +127,8 @@ public class TeamsRestController {
                         new EntityNotFoundException(format(PLAYER_NOT_FOUND_EXCEPTION, playerId)));
         team.addPlayer(player);
         team.setCaptain(player);
-        teamDao.save(team);
         playerDao.save(player);
-        return fromPlayer(player);
+        return fromTeam(teamDao.save(team));
     }
 
 }

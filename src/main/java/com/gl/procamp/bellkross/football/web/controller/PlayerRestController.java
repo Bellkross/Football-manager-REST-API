@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.gl.procamp.bellkross.football.dto.PlayerDto.fromPlayer;
+import static com.gl.procamp.bellkross.football.dto.PlayerDto.toPlayer;
 import static com.gl.procamp.bellkross.football.web.controller.ErrorMessages.PLAYER_NOT_FOUND_EXCEPTION;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
@@ -40,20 +41,20 @@ public class PlayerRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    PlayerDto postPlayer(@RequestBody Player player) {
+    PlayerDto postPlayer(@RequestBody PlayerDto player) {
         requireNonNull(player);
-        return fromPlayer(playerDao.save(player));
+        return fromPlayer(playerDao.save(toPlayer(player)));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    PlayerDto putPlayer(@PathVariable Integer id, @RequestBody Player player) {
+    PlayerDto putPlayer(@PathVariable Integer id, @RequestBody PlayerDto player) {
         requireNonNull(id);
         requireNonNull(player);
         requireNonNull(player.getId());
         if (!id.equals(player.getId())) {
             throw new IllegalArgumentException(format("Incorrect player id = %d", id));
         }
-        return fromPlayer(playerDao.save(player));
+        return fromPlayer(playerDao.save(toPlayer(player)));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
