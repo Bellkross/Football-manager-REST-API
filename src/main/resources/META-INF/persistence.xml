@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.2">
+    <persistence-unit name="FootballProperties">
+        <class>com.gl.procamp.bellkross.football.model.Player</class>
+        <class>com.gl.procamp.bellkross.football.model.Team</class>
+
+        <properties>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/football"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.connection.username" value="postgres"/>
+            <property name="hibernate.connection.password" value="root"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+        </properties>
+    </persistence-unit>
+</persistence>
