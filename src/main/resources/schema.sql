@@ -6,7 +6,8 @@ create table if not exists team
     id         integer      not null,
     name       varchar(255) not null,
     captain_id integer      not null,
-    constraint team_pk primary key (id)
+    constraint team_pk primary key (id),
+    constraint team_captain_uq unique (captain_id)
 );
 
 create table if not exists player
